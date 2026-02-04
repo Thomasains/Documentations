@@ -28,12 +28,19 @@ Do you have a TPM? - Yes "Ready for use"
 
 [screeshot* PowerShell?]
 **System Information**
+
+<img width="828" height="123" alt="image" src="https://github.com/user-attachments/assets/f509f9a6-d5df-4ec6-be70-3778c34505ec" />
+
+<img width="278" height="93" alt="image" src="https://github.com/user-attachments/assets/f0573b1b-dd79-46c5-8a78-bc0f804d6d60" />
+
+
 ```
 Lenovo ThinkPad X1 Carbon 7th
 Model: 20QD0000US
 BIOS version: N2HET84W (1.67 )
 Mode: UEFI
 Secure Boot: On
+TPM: Yes - Ready for use
 ```
 **Device Manager**
 
