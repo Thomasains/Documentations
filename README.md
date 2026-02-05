@@ -71,23 +71,37 @@ Nvme
 
 ### How To:
 PowerShell commands to retrieve the following:
+
 - 0S name, version, 32/62 bit
 ```
 Get-ComputerInfo | Select-Object OsName, WindowsVersion, OsArchitecture
 ```
 <img width="367" height="52" alt="image" src="https://github.com/user-attachments/assets/0c7035f6-bd8a-4119-bacc-497a89b62a2b" />
 
+
 - CPU model & Cores/threads
 ```
+Get-CimInstance Win32_Processor | Format-Table Name, NumberOfCores, NumberOfLogicalProcessors
 ```
+<img width="502" height="56" alt="image" src="https://github.com/user-attachments/assets/73397d6e-e42b-48dd-95dc-27ac557b5855" />
+
+
 - RAM Modules Size + Speed
 ```
+Get-CimInstance Win32_PhysicalMemory | Select-Object Manufacturer, Speed, @{Name="Capacity(GB)";Expression={[math]::Round($_.Capacity/1GB, 2)}} | Format-Table -AutoSize
 ```
+<img width="307" height="89" alt="image" src="https://github.com/user-attachments/assets/cf0bbbce-c19d-4506-ad6b-ad5835c76113" />
+
+
 - Storage Model + Type (NVMe/SATA) + Media Type + Size
 ```
+Get-PhysicalDisk | Select-Object -Property Model, MediaType, BusType, @{Name="Size (GB)"; Expression={ [int]($_.Size / 1GB) }} | Format-Table -AutoSize
 ```
+<img width="461" height="70" alt="image" src="https://github.com/user-attachments/assets/7911bf6d-e91c-492e-a61b-78acf4b2e8ac" />
+
 
 - TimeZone
 ```
 Get-TimeZone
 ```
+<img width="459" height="120" alt="image" src="https://github.com/user-attachments/assets/5e0fbdff-ed22-4fbc-9098-04642a82b252" />
