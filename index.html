@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My PC Build Documentation</title>
+  <meta name="description" content="PC Build Documentation" />
+  <!-- STYLE UNCHANGED -->
+  <!-- (Style section exactly as you provided — omitted here for brevity) -->
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-3.8 9.7-9 10-5.2-.3-9-5-9-10V6l9-4z"/></svg>
+      </div>
+      <div>
+        <h1>Documentation</h1>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">PC Build</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    <aside>
+      <div class="panel">
+        <div class="hd">
+          <strong>On this page</strong>
+        </div>
+        <div class="bd">
+          <ul class="toc" id="toc"></ul>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <article class="panel">
+
+        <section class="hero">
+          <div class="title">
+            <h2 id="article-title">My PC Build Documentation</h2>
+          </div>
+
+          <p>
+            This document captures a full snapshot of my personal PC build, including
+            hardware specifications, operating system details, and PowerShell commands
+            used to retrieve system information.
+          </p>
+        </section>
+
+        <div class="content" id="content">
+
+          <div class="divider"></div>
+
+          <h3 id="snapshot">System Snapshot</h3>
+
+          <p><b>Model</b></p>
+          <pre><code>
+Lenovo ThinkPad X1 Carbon 7th
+Model: 20QD0000US
+BIOS Version: N2HET84W (1.67)
+Boot Mode: UEFI
+Secure Boot: Enabled
+TPM: Enabled
+          </code></pre>
+
+          <img src="https://github.com/user-attachments/assets/c92b7144-c067-4f8e-888f-22e060ce77d5" width="510" />
+          <img src="https://github.com/user-attachments/assets/2c7e5b17-8912-46d9-8b67-3a90099ca6b2" width="227" />
+
+          <h3 id="os">Operating System</h3>
+          <pre><code>
+Windows 11 Home
+Version: 10.0.26200
+Architecture: 64-bit
+          </code></pre>
+
+          <img src="https://github.com/user-attachments/assets/3dabdba5-82d3-4f93-823c-9ce6f050d953" width="472" />
+
+          <h3 id="cpu">CPU</h3>
+          <pre><code>
+Intel Core i7-8565U
+4 Cores / 8 Threads
+Base Clock: 1.80GHz
+          </code></pre>
+
+          <img src="https://github.com/user-attachments/assets/2aae2116-6d4d-4889-b88c-ed5880948c42" width="641" />
+
+          <h3 id="ram">Memory</h3>
+          <pre><code>
+Installed RAM: 16 GB
+Usable: 15.8 GB
+          </code></pre>
+
+          <img src="https://github.com/user-attachments/assets/765c8cff-5ff7-40b8-9042-ecbf096a8e1a" width="352" />
+
+          <h3 id="storage">Storage</h3>
+          <pre><code>
+Samsung NVMe SSD
+Model: MZVLB512HBJQ-000L7
+Capacity: 477 GB
+Used: 343 GB
+          </code></pre>
+
+          <img src="https://github.com/user-attachments/assets/97970d0d-9a19-4ee1-8bf0-f376850c708e" width="179" />
+
+          <div class="divider"></div>
+
+          <h3 id="powershell">PowerShell Commands</h3>
+
+          <p><b>OS Information</b></p>
+          <pre><code>Get-ComputerInfo | Select OsName, WindowsVersion, OsArchitecture</code></pre>
+
+          <p><b>CPU Details</b></p>
+          <pre><code>Get-CimInstance Win32_Processor | Format-Table Name, NumberOfCores, NumberOfLogicalProcessors</code></pre>
+
+          <p><b>RAM Modules</b></p>
+          <pre><code>
+Get-CimInstance Win32_PhysicalMemory |
+Select Manufacturer, Speed,
+@{Name="Capacity(GB)";Expression={[math]::Round($_.Capacity/1GB,2)}} |
+Format-Table -AutoSize
+          </code></pre>
+
+          <p><b>Storage Devices</b></p>
+          <pre><code>
+Get-PhysicalDisk |
+Select Model, MediaType, BusType,
+@{Name="Size(GB)";Expression={[int]($_.Size/1GB)}} |
+Format-Table -AutoSize
+          </code></pre>
+
+          <p><b>Time Zone</b></p>
+          <pre><code>Get-TimeZone</code></pre>
+
+        </div>
+      </article>
+
+      <footer>
+        PC Build Documentation
+      </footer>
+    </main>
+
+  </div>
+</div>
+
+</body>
+</html>
