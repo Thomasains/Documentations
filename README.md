@@ -1,37 +1,16 @@
 # Documentations
 
-Document all external ports, if you can open your desktop also identify all internal connectors. Please take 6-10 labeled photos (ports + any internal components you can safely access) A one page "connector map" (diagram/table) that matches port/connector -> purpose -> common issue (ex: USB C data + power + video sometimes: common issue: wrong cable (Thunderbolt))
-
-If you have a laptop:
-
-Use system tools to identify motherboard / platform details
-Collect screenshots: 
-System Information (Model/Bios), 
-Device Manager (Network adapters, Display adapters), 
-Storage type (disk drives / task manager) (HDD/SATA SSD, NVMe SSD (Capacity vs storage left))
-OS Name
-In general (specs)
-Manufacturer and Model of Device
-CPU
-Cores + threads
-RAM Amount
-RAM Speed 
-On board or dedicated GPU (Model?)
-
-UEFI or Legacy BIOS Mode?
-Secure Boot Enabled?
-Do you have a TPM? - Yes "Ready for use"
-
-# My PC Build Documentation*tbd
+# My PC Build Documentation
 
 ## My PC Snapshot
 
-[screeshot* PowerShell?]
 **System Information**
 
-<img width="828" height="123" alt="image" src="https://github.com/user-attachments/assets/f509f9a6-d5df-4ec6-be70-3778c34505ec" />
+<img width="510" height="76" alt="image" src="https://github.com/user-attachments/assets/c92b7144-c067-4f8e-888f-22e060ce77d5" />;
 
-<img width="278" height="93" alt="image" src="https://github.com/user-attachments/assets/f0573b1b-dd79-46c5-8a78-bc0f804d6d60" />
+
+<img width="227" height="73" alt="image" src="https://github.com/user-attachments/assets/2c7e5b17-8912-46d9-8b67-3a90099ca6b2" />
+
 
 
 ```
@@ -44,14 +23,16 @@ TPM: Yes - Ready for use
 ```
 **Device Manager**
 
-  <img width="424" height="351" alt="image" src="https://github.com/user-attachments/assets/cf99f62c-1ad5-4fe6-a590-ed70157b9448" />;
+  <img width="322" height="266" alt="image" src="https://github.com/user-attachments/assets/e178d441-cb16-4556-a725-186507b50943" />;
   
    
-   <img width="298" height="59" alt="image" src="https://github.com/user-attachments/assets/fa612535-1084-43e7-891e-03050de9026d" />
+   <img width="221" height="44" alt="image" src="https://github.com/user-attachments/assets/e5007e1a-00dd-4f4c-b4e2-4b0a56226049" />
+
 
 **OS**
    
-   <img width="571" height="69" alt="image" src="https://github.com/user-attachments/assets/0e4e3b3d-e4cf-481e-8c10-3ff11b719782" />
+   <img width="472" height="57" alt="image" src="https://github.com/user-attachments/assets/3dabdba5-82d3-4f93-823c-9ce6f050d953" />
+
 
 ```
 Windows 11 Home
@@ -60,7 +41,8 @@ Version	10.0.26200 Build 26200
 ```
 **CPU**
 
-<img width="1074" height="26" alt="image" src="https://github.com/user-attachments/assets/02718eb2-9098-43ed-9033-48b7a460c925" />
+<img width="641" height="35" alt="image" src="https://github.com/user-attachments/assets/2aae2116-6d4d-4889-b88c-ed5880948c42" />
+
 
 ```
 Processor: Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
@@ -68,14 +50,16 @@ Processor: Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
 ```
 **RAM**
 
-<img width="385" height="151" alt="image" src="https://github.com/user-attachments/assets/21d41083-643b-4d8e-8805-4da5591dbf7f" />
+<img width="352" height="138" alt="image" src="https://github.com/user-attachments/assets/765c8cff-5ff7-40b8-9042-ecbf096a8e1a" />
+
 
 ```
 Installed RAM: 16 GB (15.8 GB usable)
 ```
 **Storage**
 
-<img width="308" height="236" alt="image" src="https://github.com/user-attachments/assets/510d41c6-9aba-4b0c-840f-22240f7d295f" />
+<img width="179" height="134" alt="image" src="https://github.com/user-attachments/assets/97970d0d-9a19-4ee1-8bf0-f376850c708e" />
+
 
 ```
 SAMSUNG MZVLB512HBJQ-000L7
@@ -86,12 +70,24 @@ Nvme
 ```
 
 ### How To:
-Use PowerShell to retrieve this information:
-- 05 name, version, 32/62 bit
-- CPU model & Cores/threads
-- RAM Modules Size + Speed
-- Storage Model + Type (NVMe/SATA) + Media Type + Size
+PowerShell commands to retrieve the following:
+- 0S name, version, 32/62 bit
+```
+Get-ComputerInfo | Select-Object OsName, WindowsVersion, OsArchitecture
+```
+<img width="367" height="52" alt="image" src="https://github.com/user-attachments/assets/0c7035f6-bd8a-4119-bacc-497a89b62a2b" />
 
-** Find out your current TimeZone **
-*** powershell
+- CPU model & Cores/threads
+```
+```
+- RAM Modules Size + Speed
+```
+```
+- Storage Model + Type (NVMe/SATA) + Media Type + Size
+```
+```
+
+- TimeZone
+```
 Get-TimeZone
+```
