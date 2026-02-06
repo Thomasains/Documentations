@@ -553,6 +553,188 @@ Format-Table -AutoSize
 
   </div>
 </div>
+<script>
+  // =========================
+  // KB Template (Vanilla JS)
+  // =========================
 
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+  // Theme toggle (persist)
+  const themeBtn = $("#themeBtn");
+  const themeLabel = $("#themeLabel");
+  const savedTheme = localStorage.getItem("kb_theme");
+  if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+  updateThemeLabel();
+
+  themeBtn.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") || "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("kb_theme", next);
+    updateThemeLabel();
+  });
+
+  function updateThemeLabel(){
+    const current = document.documentElement.getAttribute("data-theme") || "light";
+    themeLabel.textContent = current === "dark" ? "Light" : "Dark";
+  }
+
+  // Print
+  $("#printBtn").addEventListener("click", () => window.print());
+
+  // Build TOC from h3 (and optionally h2 if you add them)
+  const toc = $("#toc");
+  const headings = $$("main h3[id]");
+  headings.forEach(h => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#" + h.id;
+    a.innerHTML = `${escapeHtml(h.textContent)}<small>${escapeHtml(sectionHint(h))}</small>`;
+    li.appendChild(a);
+    toc.appendChild(li);
+  });
+
+  function sectionHint(h){
+    // Small “hint” line under each TOC entry
+    const nextP = h.nextElementSibling;
+    if (nextP && nextP.tagName.toLowerCase() === "p") {
+      const t = nextP.textContent.trim();
+      return t.length > 44 ? t.slice(0, 44) + "…" : t;
+    }
+    return "Jump to section";
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // Active section highlight in TOC
+  const links = $$("#toc a");
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        const id = entry.target.getAttribute("id");
+        links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
+      }
+    });
+  }, { rootMargin: "-25% 0px -70% 0px", threshold: 0.1 });
+
+  headings.forEach(h => obs.observe(h));
+
+  // Copy buttons for <pre>
+  $$("button[data-copy]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const pre = btn.closest("pre");
+      const code = pre ? pre.querySelector("code") : null;
+      if (!code) return;
+
+      try {
+        await navigator.clipboard.writeText(code.textContent);
+        setCopyState(btn, "Copied");
+      } catch (e) {
+        // Fallback (older browsers)
+        const ta = document.createElement("textarea");
+        ta.value = code.textContent;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        setCopyState(btn, "Copied");
+      }
+    });
+  });
+
+  function setCopyState(btn, text){
+    const span = btn.querySelector("span");
+    const old = span.textContent;
+    span.textContent = text;
+    btn.style.transform = "scale(0.98)";
+    setTimeout(() => {
+      span.textContent = old;
+      btn.style.transform = "none";
+    }, 1000);
+  }
+
+  // Search: highlights matches in the article (simple + safe)
+  const search = $("#search");
+  const content = $("#content");
+  const originalHtml = content.innerHTML;
+
+  // Ctrl+K focuses search
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      search.focus();
+    }
+  });
+
+  let searchTimer = null;
+  search.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => runSearch(search.value.trim()), 120);
+  });
+
+  function runSearch(q){
+    content.innerHTML = originalHtml; // reset
+    if (!q) return;
+
+    // Basic case-insensitive highlighting (avoids touching attributes)
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    const re = new RegExp(escapeRegex(q), "gi");
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !re.test(text)) return;
+
+      const frag = document.createDocumentFragment();
+      let last = 0;
+      text.replace(re, (match, offset) => {
+        frag.appendChild(document.createTextNode(text.slice(last, offset)));
+        const mark = document.createElement("mark");
+        mark.textContent = match;
+        frag.appendChild(mark);
+        last = offset + match.length;
+      });
+      frag.appendChild(document.createTextNode(text.slice(last)));
+
+      node.parentNode.replaceChild(frag, node);
+    });
+
+    // Re-bind copy buttons after reset/highlight
+    $$("button[data-copy]").forEach(btn => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = "1";
+      btn.addEventListener("click", async () => {
+        const pre = btn.closest("pre");
+        const code = pre ? pre.querySelector("code") : null;
+        if (!code) return;
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          setCopyState(btn, "Copied");
+        } catch (e) { /* ignore */ }
+      });
+    });
+  }
+
+  function escapeRegex(s){
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  // Collapse/expand TOC
+  const tocWrap = $("#tocWrap");
+  const collapseTocBtn = $("#collapseTocBtn");
+  const tocLabel = $("#tocLabel");
+  let tocCollapsed = false;
+
+  collapseTocBtn.addEventListener("click", () => {
+    tocCollapsed = !tocCollapsed;
+    tocWrap.style.display = tocCollapsed ? "none" : "block";
+    tocLabel.textContent = tocCollapsed ? "Expand" : "Collapse";
+  });
+</script>
 </body>
 </html>
